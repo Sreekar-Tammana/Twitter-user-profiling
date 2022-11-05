@@ -64,7 +64,11 @@ else:
     df = []
     display_df = []
     analysis = []
-    for info in timeline:
+    # tweet_id = {}
+
+    for info in timeline[:2]:
+        # print(info)
+        # print('\n')
         df.append(info.full_text)
         analysis.append( TextBlob(info.full_text).sentiment.polarity )
 
