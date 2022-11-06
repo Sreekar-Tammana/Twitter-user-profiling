@@ -5,6 +5,7 @@ import tweepy as tp
 import streamlit.components.v1 as components
 from textblob import TextBlob
 import matplotlib.pyplot as plt
+import plotly.express as px
 import fun
 
 # Read Configs
@@ -64,6 +65,8 @@ else:
     df = []
     display_df = []
     analysis = []
+    tweet_time = []
+    days = []
     # tweet_id = {}
 
     for info in timeline[:2]:
@@ -74,11 +77,45 @@ else:
 
     for info in timeline[:no_of_tweets]:
         display_df.append(info.full_text)
+        # print(f"Created at : {info.created_at}\n")
+        x = info.created_at
+        tweet_time.append(x.strftime("%H"))
+        days.append(x.strftime("%A"))
+        # tweet_time.append(x.strftime("%I%p"))
     
     df_table = pd.DataFrame(data= df, columns= ['Tweets'])
+    tweet_time_df = pd.DataFrame(data=tweet_time, columns=['Time'])
+    tweet_time_df['Days'] = days
+    # tweet_time_df.sort_values(ascending=True, by='Time', inplace=True)
     df_table['Polarity'] = analysis
     st.table(display_df)
+    st.table(tweet_time_df)
+    tweet_time_df.to_csv(index=False)
+    # st.line_chart(tweet_time_df)
 
+    plt.bar(tweet_time_df['Days'], tweet_time_df['Time'])
+    # st.pyplot(fig)
+    # plt.show()
+
+    ### Download section
+    @st.experimental_memo
+    def convert_df(df):
+        return df.to_csv(index=False).encode('utf-8')
+
+
+    csv = convert_df(tweet_time_df)
+
+    st.download_button(
+    "Press to Download",
+    csv,
+    "file.csv",
+    "text/csv",
+    key='download-csv'
+    )
+    ### Download section
+
+    fig = tweet_time_df.set_index('Days')
+    st.bar_chart(fig)
 # print(data)
 
 # if st.session_state.name != "":
