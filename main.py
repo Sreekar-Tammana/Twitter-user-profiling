@@ -65,39 +65,61 @@ else:
     df = []
     display_df = []
     analysis = []
+    analysis_emoji = []
     tweet_time = []
     days = []
+    top_5_tweets = []
+    likes = []
     # tweet_id = {}
 
-    for info in timeline[:2]:
+    for info in timeline:
         # print(info)
         # print('\n')
         df.append(info.full_text)
         analysis.append( TextBlob(info.full_text).sentiment.polarity )
+        x = info.created_at
+        tweet_time.append(x.strftime("%H"))
+        days.append(x.strftime("%A"))
+        likes.append(info.favorite_count)
 
     for info in timeline[:no_of_tweets]:
         display_df.append(info.full_text)
         # print(f"Created at : {info.created_at}\n")
         x = info.created_at
-        tweet_time.append(x.strftime("%H"))
-        days.append(x.strftime("%A"))
+        # tweet_time.append(x.strftime("%H"))
+        # days.append(x.strftime("%A"))
         # tweet_time.append(x.strftime("%I%p"))
     
     df_table = pd.DataFrame(data= df, columns= ['Tweets'])
     tweet_time_df = pd.DataFrame(data=tweet_time, columns=['Time'])
     tweet_time_df['Days'] = days
-    # tweet_time_df.sort_values(ascending=True, by='Time', inplace=True)
     df_table['Polarity'] = analysis
+    # print(df_table['Polarity'].dtype)
     st.table(display_df)
-    st.table(tweet_time_df)
-    tweet_time_df.to_csv(index=False)
-    # st.line_chart(tweet_time_df)
+    # st.table(df_table)
+    # fun.polarity_emojis(df_table['Polarity'], analysis_emoji)
+    for val in analysis:
+        if val >= -1 and val <= -0.6:
+            analysis_emoji.append('😟')
+        elif val >= -0.5 and val <= -0.1:
+            analysis_emoji.append('😶')
+        elif val == 0:
+            analysis_emoji.append('😐')
+        elif val >= 0.0 and val <= 0.4:
+            analysis_emoji.append('🙂')
+        elif val >= 0.4 and val <= 1:
+            analysis_emoji.append('😀')
 
-    plt.bar(tweet_time_df['Days'], tweet_time_df['Time'])
-    # st.pyplot(fig)
-    # plt.show()
+
+    # st.table(likes)
+    df_table['Likes'] = likes
+    df_table['Emoji'] = pd.DataFrame(analysis_emoji)
+    st.table(df_table)
+
+    # st.table(tweet_time_df)
 
     ### Download section
+    tweet_time_df.to_csv(index=False)
     @st.experimental_memo
     def convert_df(df):
         return df.to_csv(index=False).encode('utf-8')
@@ -115,7 +137,7 @@ else:
     ### Download section
 
     fig = tweet_time_df.set_index('Days')
-    st.bar_chart(fig)
+    st._arrow_bar_chart(fig)
 # print(data)
 
 # if st.session_state.name != "":
