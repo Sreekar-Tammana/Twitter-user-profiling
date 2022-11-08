@@ -6,6 +6,7 @@ import streamlit.components.v1 as components
 from textblob import TextBlob
 import matplotlib.pyplot as plt
 import plotly.express as px
+import requests
 import fun
 
 # Read Configs
@@ -70,6 +71,7 @@ else:
     days = []
     top_5_tweets = []
     likes = []
+    links = []
     # tweet_id = {}
 
     for info in timeline:
@@ -81,6 +83,7 @@ else:
         tweet_time.append(x.strftime("%H"))
         days.append(x.strftime("%A"))
         likes.append(info.favorite_count)
+        links.append(f"https://twitter.com/twitter/statuses/{info.id}")
 
     for info in timeline[:no_of_tweets]:
         display_df.append(info.full_text)
@@ -96,6 +99,7 @@ else:
     df_table['Polarity'] = analysis
     # print(df_table['Polarity'].dtype)
     st.table(display_df)
+    # st.table(links)
     # st.table(df_table)
     # fun.polarity_emojis(df_table['Polarity'], analysis_emoji)
     for val in analysis:
@@ -116,7 +120,43 @@ else:
     df_table['Emoji'] = pd.DataFrame(analysis_emoji)
     st.table(df_table)
 
-    # st.table(tweet_time_df)
+    most_liked_tweet = pd.DataFrame(data= links)
+    # most_liked_tweet['Links'] = links
+    most_liked_tweet['Likes'] = likes
+    most_liked_tweet_df = most_liked_tweet.sort_values(by='Likes', ascending=False)
+    st.table(most_liked_tweet_df)
+
+
+    top_5_tweets_df = pd.DataFrame(data= top_5_tweets, columns=['Tweets', 'Likes'])
+    top_5_tweets_df['Tweets'] = df_table['Tweets']
+    top_5_tweets_df['Likes'] = likes
+    st.table(top_5_tweets_df.sort_values(by='Likes', ascending=False))
+    top_tweets_5 = top_5_tweets_df.sort_values(by='Likes', ascending=False)
+
+    for t in top_tweets_5['Tweets'][:5]:
+        print(t)
+
+    ## Displaying top tweet
+    st.title("Most liked tweet")
+    class Tweet(object):
+        def __init__(self, s, embed_str=False):
+            if not embed_str:
+                # Use Twitter's oEmbed API
+                # https://dev.twitter.com/web/embedded-tweets
+                api = "https://publish.twitter.com/oembed?url={}".format(s)
+                response = requests.get(api)
+                self.text = response.json()["html"]
+            else:
+                self.text = s
+
+        def _repr_html_(self):
+            return self.text
+
+        def component(self):
+            return components.html(self.text, height=600)
+
+    t = Tweet(most_liked_tweet_df.iat[0, 0]).component()
+    ## Displaying top tweet
 
     ### Download section
     tweet_time_df.to_csv(index=False)
@@ -136,8 +176,11 @@ else:
     )
     ### Download section
 
+    ### Chart display
+    st.title("Activetly tweeted time")
     fig = tweet_time_df.set_index('Days')
     st._arrow_bar_chart(fig)
+    ### Chart display
 # print(data)
 
 # if st.session_state.name != "":

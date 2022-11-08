@@ -22,7 +22,7 @@ def tweet_url(s_name, t_id):
     return res
 
 def polarity_emojis(dataframe, df_store):
-    for val in range(dataframe):
+    for val in range(len(dataframe)):
         if val >= -1 and val <= -0.6:
             df_store.append('😟')
         elif val >= -0.5 and val <= -0.1:
