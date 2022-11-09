@@ -52,7 +52,6 @@ name = check_username
 no_of_tweets = st.slider('Select no. of tweets want to retrieve', 2, 25)
 
 # # Getting User
-# if name != "":
 if name == "":
     pass
 else:
@@ -72,11 +71,8 @@ else:
     top_5_tweets = []
     likes = []
     links = []
-    # tweet_id = {}
 
     for info in timeline:
-        # print(info)
-        # print('\n')
         df.append(info.full_text)
         analysis.append( TextBlob(info.full_text).sentiment.polarity )
         x = info.created_at
@@ -87,21 +83,13 @@ else:
 
     for info in timeline[:no_of_tweets]:
         display_df.append(info.full_text)
-        # print(f"Created at : {info.created_at}\n")
         x = info.created_at
-        # tweet_time.append(x.strftime("%H"))
-        # days.append(x.strftime("%A"))
-        # tweet_time.append(x.strftime("%I%p"))
     
     df_table = pd.DataFrame(data= df, columns= ['Tweets'])
     tweet_time_df = pd.DataFrame(data=tweet_time, columns=['Time'])
     tweet_time_df['Days'] = days
     df_table['Polarity'] = analysis
-    # print(df_table['Polarity'].dtype)
     st.table(display_df)
-    # st.table(links)
-    # st.table(df_table)
-    # fun.polarity_emojis(df_table['Polarity'], analysis_emoji)
     for val in analysis:
         if val >= -1 and val <= -0.6:
             analysis_emoji.append('😟')
@@ -115,17 +103,16 @@ else:
             analysis_emoji.append('😀')
 
 
-    # st.table(likes)
     df_table['Likes'] = likes
     df_table['Emoji'] = pd.DataFrame(analysis_emoji)
     st.table(df_table)
 
+    ### Getting most liked tweet
     most_liked_tweet = pd.DataFrame(data= links)
-    # most_liked_tweet['Links'] = links
     most_liked_tweet['Likes'] = likes
     most_liked_tweet_df = most_liked_tweet.sort_values(by='Likes', ascending=False)
     st.table(most_liked_tweet_df)
-
+    ### Getting most liked tweet
 
     top_5_tweets_df = pd.DataFrame(data= top_5_tweets, columns=['Tweets', 'Likes'])
     top_5_tweets_df['Tweets'] = df_table['Tweets']
@@ -181,66 +168,3 @@ else:
     fig = tweet_time_df.set_index('Days')
     st._arrow_bar_chart(fig)
     ### Chart display
-# print(data)
-
-# if st.session_state.name != "":
-    # st.title("Hi")
-    # fun.basic_info(data)
-    # st.caption("Username")
-    # st.subheader(data['name'])
-# else:
-#     pass
-    # st.session_state.name = ""
-# else:
-#     name = ""
-# # print(type(user)) # CLASS type
-
-# # Get particular data from "user" variable
-
-# # Name of user
-# print(f"Name : {data['name']}")
-# if st.session_state.name != " ":
-#     fun.display_name(data)
-#     st.caption("Username")
-#     st.subheader(data['name'])
-# else:
-#     st.session_state.name = ""
-
-# # ID of user
-# print(f"ID of {data['name']} : {data['id']}")
-
-# Profile image of user
-# print(f"Profile image : {data['profile_image_url']}")
-# st.image(data['profile_image_url'])
-
-# # Followers of user
-# print(f"Followers : {user.followers_count}")
-
-# # Friends of user
-# print(f"Following : {data['friends_count']}")
-
-# # Total number of tweets upto date
-# print(f"Total number of tweets : {user.statuses_count}")
-
-# # Getting user's tweets, time & day posted of every tweet
-# timeline = api.user_timeline(
-#     screen_name=name, count=200, include_rts=False, tweet_mode='extended')
-
-# api.home_timeline
-# print(timeline)
-# df = []
-# for info in timeline:
-#     print('\n')
-#     df.append(info.full_text)
-
-    # print(ans['html'])
-    # print(info)
-    # print(f"ID of tweet {info.id}")
-    # print(f"Created at : {info.created_at}")
-    # x = info.created_at
-    # print(f"Day created : {x.strftime('%a')}")
-    # print(f'Time created : {x.strftime("%X")}')
-    # print(f"Text of tweet : {info.full_text}")
-
-# df_table = pd.DataFrame(data= df, columns= ['Tweets'])
-# st.table(df_table)
