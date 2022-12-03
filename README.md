@@ -6,6 +6,7 @@
 A tool helps a user to understand their audience and in which way one can improve their content.
 
 ## 🚀 Demo
+[Recording_1670070088556.webm](https://user-images.githubusercontent.com/42037409/205440815-42204a4a-447c-4abe-b054-e4d125cd4bb5.webm)
 
 ## 📷 Screenshots
 
@@ -19,34 +20,40 @@ A tool helps a user to understand their audience and in which way one can improv
 
 ## 🛠️ Installation Steps
 
-1. Clone the repository
+1. SignUp for Twitter developer account to get access Twitter API
+2. Grab all neccessary keys mentioned in code.
+
+3. Clone the repository
 
 ```bash
-git clone https://github.com/Sreekar-Tammana/shape-detection.git
+git clone https://github.com/Sreekar-Tammana/Twitter-user-profiling.git
 ```
-
-2. Change the working directory
+4. Change the working directory
 
 ```bash
-cd shape-detection
+cd Twitter-user-profiling
 ```
 
-3. Install Libraries
+5. Install Dependencies
 
 ```bash
-pip install numpy opencv-python
+pip install -r requirements.txt
 ```
 
-4. Run the app
+6. Run the app
 ```bash
-python main.py
+streamlit run main.py
 ```
-
-This opens up your webcam or locally connected your phone camera, then place objects front of camera and it gives you Points and Area values.
 
 ## 💻 Built with
 - [Python](https://python.org/)
-- [OpenCV](https://opencv.org/releases/)
+- Twitter API
+- [TweePy](https://www.tweepy.org/)
+- [Streamlit](https://streamlit.io/)
+- [TextBlob](https://textblob.readthedocs.io/en/dev/)
+- [Pandas](https://pandas.pydata.org/)
+- ConfigParser
+- [Request](https://pypi.org/project/requests/)
 
 ## 🌈 Future Work
 - Create interface for easy usage
