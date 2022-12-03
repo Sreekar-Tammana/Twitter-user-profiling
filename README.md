@@ -8,8 +8,6 @@ A tool helps a user to understand their audience and in which way one can improv
 ## 🚀 Demo
 [Recording_1670070088556.webm](https://user-images.githubusercontent.com/42037409/205440815-42204a4a-447c-4abe-b054-e4d125cd4bb5.webm)
 
-## 📷 Screenshots
-
 ## 🧐 Features
 - ℹ **Displays basic information**
 - 📈 **Analyzes tweets and provides polarity values**
