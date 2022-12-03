@@ -1,5 +1,7 @@
-# config.ini
-# API key
-# API key Secret
+config.ini
+API key
+API key Secret
 __pycache__
 tupEnv
+project_documentation.docx
+.vscode
