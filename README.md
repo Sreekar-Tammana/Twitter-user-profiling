@@ -56,7 +56,7 @@ streamlit run main.py
 - [Request](https://pypi.org/project/requests/)
 
 ## 🌈 Future Work
-- Create interface for easy usage
+- More charts to be for in-depth analysis
 - Deploy application
 - Write a blog about project
 
