@@ -1,3 +1,4 @@
+# IMPORTING LIBRARIES
 import configparser as cp
 import pandas as pd
 import streamlit as st
@@ -9,46 +10,43 @@ import plotly.express as px
 import requests
 import fun
 
-# Read Configs
+# READ CONFIGS FILE
 config = cp.ConfigParser()
 config.read('config.ini')
 
+# SECRET KEYS FROM TWITTER API
 api_key = config['twitter']['api_key']
 api_key_secret = config['twitter']['api_key_secret']
 access_token = config['twitter']['access_token']
 access_token_secret = config['twitter']['access_token_secret']
 bearer_token = 'AAAAAAAAAAAAAAAAAAAAAIf8gwEAAAAAPyF47sM6UGJKQGtVBcVL6t%2FVHwY%3DNciSlNBZEBq9heuovwgXXEKiX5la23y30inP1yNV6bMwIUT6oL'
 
-# Authentication
+# AUTHENTICATION
 auth = tp.OAuth1UserHandler(api_key, api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 
-# Instance of API
+# INSTANCE OF API
 api = tp.API(auth, wait_on_rate_limit=True)
 
 
-
-############################################################################
+###################################################################
 # STREAMLIT APP STARTS HERE......
 
-# Title
+# TITLE
 st.title("Twitter User Profiling")
-# st.title("Twitter User Profiling \U0001F923")
 
-####
+# GRABS INFO FROM INPUT FIELD
 with st.form("my_form"):
-    # st.write("Username")
     check_username = st.text_input("Username", key="name")
 
     # Every form must have a submit button.
     submitted = st.form_submit_button("Submit")
-
-
 ####################################################################
-### TWEEPY
-# # Enter Username (screen_name in tweepy)
+
+# TWEEPY
 name = check_username
 
+# Slider for number of tweets
 no_of_tweets = st.slider('Select no. of tweets want to retrieve', 2, 25)
 
 # # Getting User
@@ -62,6 +60,7 @@ else:
     timeline = api.user_timeline(
         screen_name=name, count=200, include_rts=False, tweet_mode='extended')
 
+    # Variables for storing information
     df = []
     display_df = []
     analysis = []
@@ -72,6 +71,7 @@ else:
     likes = []
     links = []
 
+    # Get information from user timeline
     for info in timeline:
         df.append(info.full_text)
         analysis.append( TextBlob(info.full_text).sentiment.polarity )
@@ -90,6 +90,8 @@ else:
     tweet_time_df['Days'] = days
     df_table['Polarity'] = analysis
     st.table(display_df)
+
+    # Emoji's based on the polarity values
     for val in analysis:
         if val >= -1 and val <= -0.6:
             analysis_emoji.append('😟')
@@ -103,6 +105,7 @@ else:
             analysis_emoji.append('😀')
 
 
+    # DataFrames for Likes, Emoji's
     df_table['Likes'] = likes
     df_table['Emoji'] = pd.DataFrame(analysis_emoji)
     st.table(df_table)
@@ -112,8 +115,8 @@ else:
     most_liked_tweet['Likes'] = likes
     most_liked_tweet_df = most_liked_tweet.sort_values(by='Likes', ascending=False)
     st.table(most_liked_tweet_df)
-    ### Getting most liked tweet
 
+    # Top 5 tweets
     top_5_tweets_df = pd.DataFrame(data= top_5_tweets, columns=['Tweets', 'Likes'])
     top_5_tweets_df['Tweets'] = df_table['Tweets']
     top_5_tweets_df['Likes'] = likes
@@ -143,7 +146,6 @@ else:
             return components.html(self.text, height=600)
 
     t = Tweet(most_liked_tweet_df.iat[0, 0]).component()
-    ## Displaying top tweet
 
     ### Download section
     tweet_time_df.to_csv(index=False)
@@ -161,10 +163,8 @@ else:
     "text/csv",
     key='download-csv'
     )
-    ### Download section
 
     ### Chart display
     st.title("Activetly tweeted time")
     fig = tweet_time_df.set_index('Days')
     st._arrow_bar_chart(fig)
-    ### Chart display
